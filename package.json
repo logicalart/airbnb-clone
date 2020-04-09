@@ -9,7 +9,6 @@
     "css": "gulp"
   },
   "homepage": "https://github.com/logicalart/airbnb-clone#readme",
-  "description": "",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-csso": "^4.0.1",
@@ -17,5 +16,13 @@
     "gulp-sass": "^4.0.2",
     "node-sass": "^4.13.1",
     "tailwindcss": "^1.2.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/logicalart/airbnb-clone/issues"
+  },
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
