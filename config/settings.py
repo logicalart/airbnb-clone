@@ -134,7 +134,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 AUTH_USER_MODEL = "users.User"
 
-MEDIA_ROOT = os.path.join(BASE_DIR + "uploads")
+MEDIA_ROOT = os.path.join(BASE_DIR + "/uploads")
 MEDIA_URL = "/media/"
 
 # E-Mail Configurations
@@ -143,3 +143,6 @@ EMAIL_PORT = "587"
 EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSOWRD")
 EMAIL_FROM = "postmaster@mail.originlab.xyz"
+
+# Auth
+LOGIN_URL = "/users/login/"
