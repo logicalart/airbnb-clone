@@ -1,10 +1,9 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 .search-box {
-    transition: box-shadow 0.2s linear;
-  }
+  transition: box-shadow 0.2s linear;
+}
 
 .nav_link {
   @apply ml-6 border-b-2 border-white h-full flex items-center;
@@ -41,7 +40,6 @@ textarea {
 select {
   height: 50px;
 }
-
 
 form {
   .input {
@@ -106,3 +104,5 @@ form {
 .cal-number {
   @apply w-full text-center rounded p-1 cursor-pointer;
 }
+
+@tailwind utilities;

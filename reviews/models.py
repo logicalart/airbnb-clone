@@ -2,8 +2,10 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from core import models as core_models
 
-# Create your models here.
+
 class Review(core_models.TimeStampedModel):
+
+    """ Review Model Definition """
 
     review = models.TextField()
     accuracy = models.IntegerField(
@@ -30,7 +32,7 @@ class Review(core_models.TimeStampedModel):
     )
 
     def __str__(self):
-        return f"{self.review} - {self.user}"
+        return f"{self.review} - {self.room}"
 
     def rating_average(self):
         avg = (
@@ -41,7 +43,6 @@ class Review(core_models.TimeStampedModel):
             + self.check_in
             + self.value
         ) / 6
-
         return round(avg, 2)
 
     rating_average.short_description = "Avg."

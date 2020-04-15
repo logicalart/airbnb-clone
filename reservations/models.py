@@ -19,6 +19,8 @@ class BookedDay(core_models.TimeStampedModel):
 
 class Reservation(core_models.TimeStampedModel):
 
+    """ Reservation Model Definition """
+
     STATUS_PENDING = "pending"
     STATUS_CONFIRMED = "confirmed"
     STATUS_CANCELED = "canceled"
@@ -34,7 +36,9 @@ class Reservation(core_models.TimeStampedModel):
     )
     check_in = models.DateField()
     check_out = models.DateField()
-    guest = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    guest = models.ForeignKey(
+        "users.User", related_name="reservations", on_delete=models.CASCADE
+    )
     room = models.ForeignKey(
         "rooms.Room", related_name="reservations", on_delete=models.CASCADE
     )
@@ -44,14 +48,12 @@ class Reservation(core_models.TimeStampedModel):
 
     def in_progress(self):
         now = timezone.now().date()
-
         return now >= self.check_in and now <= self.check_out
 
     in_progress.boolean = True
 
     def is_finished(self):
         now = timezone.now().date()
-
         is_finished = now > self.check_out
         if is_finished:
             BookedDay.objects.filter(reservation=self).delete()
@@ -67,7 +69,6 @@ class Reservation(core_models.TimeStampedModel):
             existing_booked_day = BookedDay.objects.filter(
                 day__range=(start, end)
             ).exists()
-
             if not existing_booked_day:
                 super().save(*args, **kwargs)
                 for i in range(difference.days + 1):

@@ -3,11 +3,13 @@ from django.db import models
 from django.urls import reverse
 from django_countries.fields import CountryField
 from core import models as core_models
-from users import models as users_models
 from cal import Calendar
 
 
 class AbstractItem(core_models.TimeStampedModel):
+
+    """ Abstract Item """
+
     name = models.CharField(max_length=80)
 
     class Meta:
@@ -18,27 +20,55 @@ class AbstractItem(core_models.TimeStampedModel):
 
 
 class RoomType(AbstractItem):
+
+    """ RoomType Model Definition """
+
     class Meta:
         verbose_name = "Room Type"
-        ordering = ["name"]
 
 
 class Amenity(AbstractItem):
+
+    """ Amenity Model Definition """
+
     class Meta:
         verbose_name_plural = "Amenities"
 
 
 class Facility(AbstractItem):
+
+    """ Facility Model Definition """
+
+    pass
+
     class Meta:
         verbose_name_plural = "Facilities"
 
 
 class HouseRule(AbstractItem):
+
+    """ HouseRule Model Definition """
+
     class Meta:
         verbose_name = "House Rule"
 
 
+class Photo(core_models.TimeStampedModel):
+
+    """ Photo Model Definition """
+
+    caption = models.CharField(max_length=80)
+    file = models.ImageField(upload_to="room_photos")
+    room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.caption
+
+
 class Room(core_models.TimeStampedModel):
+
+    """ Room Model Definition """
+
     name = models.CharField(max_length=140)
     description = models.TextField()
     country = CountryField()
@@ -54,7 +84,7 @@ class Room(core_models.TimeStampedModel):
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
         "users.User", related_name="rooms", on_delete=models.CASCADE
-    )  # CASCADE 폭포수. 다른 필드에 영향을 줌
+    )
     room_type = models.ForeignKey(
         "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
     )
@@ -66,7 +96,7 @@ class Room(core_models.TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        # print(self.city)
+        self.city = str.capitalize(self.city)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -75,17 +105,15 @@ class Room(core_models.TimeStampedModel):
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
-
         if len(all_reviews) > 0:
             for review in all_reviews:
                 all_ratings += review.rating_average()
-
-            return all_ratings / len(all_reviews)
+            return round(all_ratings / len(all_reviews), 2)
         return 0
 
     def first_photo(self):
         try:
-            (photo,) = self.photos.all()[:1]
+            photo, = self.photos.all()[:1]
             return photo.file.url
         except ValueError:
             return None
@@ -104,12 +132,3 @@ class Room(core_models.TimeStampedModel):
         this_month_cal = Calendar(this_year, this_month)
         next_month_cal = Calendar(this_year, next_month)
         return [this_month_cal, next_month_cal]
-
-
-class Photo(core_models.TimeStampedModel):
-    caption = models.CharField(max_length=80)
-    file = models.ImageField(upload_to="room_photos")
-    room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.caption

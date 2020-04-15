@@ -6,10 +6,10 @@ class Command(BaseCommand):
 
     help = "This command creates facilities"
 
-    """
+    """ 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--times", help="How many times do you want me to tell you."
+            "--times", help="How many times do you want me to tell you that I love you?"
         )
     """
 
@@ -22,8 +22,6 @@ class Command(BaseCommand):
             "Parking",
             "Gym",
         ]
-
-        for a in facilities:
-            Facility.objects.create(name=a)
-
+        for f in facilities:
+            Facility.objects.create(name=f)
         self.stdout.write(self.style.SUCCESS(f"{len(facilities)} facilities created!"))

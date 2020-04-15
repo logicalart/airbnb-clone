@@ -4,12 +4,11 @@ from . import models
 
 @admin.register(models.List)
 class ListAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "user",
-        "count_rooms",
-    )
+
+    """ List Admin Definition """
+
+    list_display = ("name", "user", "count_rooms")
 
     search_fields = ("name",)
 
-    filter_horizontals = ("rooms",)
+    filter_horizontal = ("rooms",)

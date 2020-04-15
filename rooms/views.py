@@ -1,5 +1,4 @@
 from django.http import Http404
-from django.utils import timezone
 from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
@@ -11,6 +10,9 @@ from . import models, forms
 
 
 class HomeView(ListView):
+
+    """ HomeView Definition """
+
     model = models.Room
     paginate_by = 12
     paginate_orphans = 5
@@ -19,10 +21,14 @@ class HomeView(ListView):
 
 
 class RoomDetail(DetailView):
+
+    """ RoomDetail Definition """
+
     model = models.Room
 
 
 class SearchView(View):
+
     """ SearchView Definition """
 
     def get(self, request):
@@ -87,16 +93,17 @@ class SearchView(View):
 
                 qs = models.Room.objects.filter(**filter_args).order_by("-created")
 
+                paginator = Paginator(qs, 10, orphans=5)
+
+                page = request.GET.get("page", 1)
+
+                rooms = paginator.get_page(page)
+
+                return render(
+                    request, "rooms/search.html", {"form": form, "rooms": rooms}
+                )
+
         else:
-
-            paginator = Paginator(qs, 10, orphans=5)
-
-            page = request.GET.get("page", 1)
-
-            rooms = paginator.get_page(page)
-
-            return render(request, "rooms/search.html", {"form": form, "rooms": rooms})
-
             form = forms.SearchForm()
 
         return render(request, "rooms/search.html", {"form": form})
@@ -134,6 +141,7 @@ class EditRoomView(user_mixins.LoggedInOnlyView, UpdateView):
 
 
 class RoomPhotosView(user_mixins.LoggedInOnlyView, DetailView):
+
     model = models.Room
     template_name = "rooms/room_photos.html"
 
@@ -160,6 +168,7 @@ def delete_photo(request, room_pk, photo_pk):
 
 
 class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
+
     model = models.Photo
     template_name = "rooms/photo_edit.html"
     pk_url_kwarg = "photo_pk"
@@ -172,6 +181,7 @@ class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateVie
 
 
 class AddPhotoView(user_mixins.LoggedInOnlyView, FormView):
+
     template_name = "rooms/photo_create.html"
     form_class = forms.CreatePhotoForm
 

@@ -10,9 +10,7 @@ class SearchForm(forms.Form):
     room_type = forms.ModelChoiceField(
         required=False, empty_label="Any kind", queryset=models.RoomType.objects.all()
     )
-
     price = forms.IntegerField(required=False)
-
     guests = forms.IntegerField(required=False)
     bedrooms = forms.IntegerField(required=False)
     beds = forms.IntegerField(required=False)

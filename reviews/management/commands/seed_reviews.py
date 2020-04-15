@@ -12,15 +12,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--number",
-            default=2,
-            type=int,
-            help="How many reviews do you want to create",
+            "--number", default=2, type=int, help="How many reviews you want to create"
         )
 
     def handle(self, *args, **options):
         number = options.get("number")
-
         seeder = Seed.seeder()
         users = user_models.User.objects.all()
         rooms = room_models.Room.objects.all()
@@ -39,5 +35,4 @@ class Command(BaseCommand):
             },
         )
         seeder.execute()
-
         self.stdout.write(self.style.SUCCESS(f"{number} reviews created!"))
